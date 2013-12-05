@@ -12,7 +12,6 @@ class window.HandView extends Backbone.View
   render: ->
     @$el.children().detach()
     @$el.html @template @collection
-    console.log("I am receiving: " + @collection.scores().pop())
     @$el.append @collection.map (card) ->
       new CardView(model: card).$el
     @$('.score').text @collection.scores()

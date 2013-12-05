@@ -7,10 +7,41 @@
   margin-right: 20px;
 }
 
-.covered {
-  /*background-color: black;*/
-}
-
 .hand {
   overflow: auto;
+}
+
+body {
+  background-image: url("http://nation.towergaming.com/wp-content/uploads/2010/03/blackjackpntn_screenshot_unbranded.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
+}
+
+* {
+  color: white;
+}
+
+button {
+  background-color: gray;
+}
+
+.cards {
+  width: 100px;
+}
+
+
+.covered {
+  position: absolute;
+  z-index: 99;
+  width: 100px;
+  height: 139px;
+  background-image: url("card-back.png");
+  background-size: 100px 139px;
+}
+
+.back {
+  position: absolute;
+  background-color: black;
+  z-index: 999;
 }

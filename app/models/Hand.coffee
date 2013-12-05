@@ -6,6 +6,7 @@ class window.Hand extends Backbone.Collection
 
   hit: ->
     @add(@deck.pop()).last()
+    @.trigger('getScores', @);
 
   hasStood: false;
 
@@ -29,15 +30,11 @@ class window.Hand extends Backbone.Collection
     if score > 21 && !hasAce then @.trigger('lose', @)
     if @isDealer and hasAce and !@hasStood
       if @array[1].attributes.rankName == "Ace"
-        console.log("I am sending: " + [score + 10])
         [score + 10]
       else
-        console.log("I am sending: " + [score])
         [score]
     else
       if hasAce and (score + 10 <= 21)
-        console.log("I am sending: " + [score + 10])
         [score + 10]
       else
-        console.log("I am sending: " + [score])
         [score]
