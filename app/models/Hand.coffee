@@ -10,8 +10,8 @@ class window.Hand extends Backbone.Collection
   hasStood: false;
 
   stand: -> if @isDealer
-    @array[0].flip()
     @hasStood = true
+    @array[0].flip()
     while @scores().pop() < 17
       @hit()
     if @scores().pop() > 21 then @.trigger('bust', @)
@@ -33,11 +33,11 @@ class window.Hand extends Backbone.Collection
         [score + 10]
       else
         console.log("I am sending: " + [score])
-        [score] X
+        [score]
     else
       if hasAce and (score + 10 <= 21)
         console.log("I am sending: " + [score + 10])
-        [score + 10] X
+        [score + 10]
       else
         console.log("I am sending: " + [score])
         [score]

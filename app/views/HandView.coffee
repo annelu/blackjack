@@ -15,4 +15,4 @@ class window.HandView extends Backbone.View
     console.log("I am receiving: " + @collection.scores().pop())
     @$el.append @collection.map (card) ->
       new CardView(model: card).$el
-    @$('.score').text @collection.scores()[0]
+    @$('.score').text @collection.scores()
