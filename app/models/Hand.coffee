@@ -2,9 +2,19 @@ class window.Hand extends Backbone.Collection
 
   model: Card
 
-  initialize: (array, @deck, @isDealer) ->
+  initialize: (@array, @deck, @isDealer) ->
 
-  hit: -> @add(@deck.pop()).last()
+  hit: ->
+    @add(@deck.pop()).last()
+
+  hasStood: false;
+
+  stand: -> if @isDealer
+    @array[0].flip()
+    @hasStood = true
+    while @scores().pop() < 17
+      @hit()
+    if @scores().pop() > 21 then @.trigger('bust', @)
 
   scores: ->
     # The scores are an array of potential scores.
@@ -16,4 +26,18 @@ class window.Hand extends Backbone.Collection
     score = @reduce (score, card) ->
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
-    if hasAce then [score, score + 10] else [score]
+    if score > 21 && !hasAce then @.trigger('lose', @)
+    if @isDealer and hasAce and !@hasStood
+      if @array[1].attributes.rankName == "Ace"
+        console.log("I am sending: " + [score + 10])
+        [score + 10]
+      else
+        console.log("I am sending: " + [score])
+        [score] X
+    else
+      if hasAce and (score + 10 <= 21)
+        console.log("I am sending: " + [score + 10])
+        [score + 10] X
+      else
+        console.log("I am sending: " + [score])
+        [score]
