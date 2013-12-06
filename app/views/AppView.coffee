@@ -16,23 +16,45 @@ class window.AppView extends Backbone.View
       $('.button-container').html('<h3>Waiting for Dealer</h3>')
     "click .playagain": ->
       @model.initialize()
-      @.initialize()
+      @.reset()
 
-  initialize: ->
-    bet = @model.get('playerHand').betAmount
-    stack = @model.stack
-    @model.stack = stack - bet
-    # $('body').html("");
+  reset: ->
     that = @
     @render()
     @$('.stack').html('<h3>Your stack is: ' + @model.stack + '</h3>')
+    @listenerOff()
+    @listenerOn()
+
+  initialize: ->
+    @model.stack - @model
+    @render()
+    @$('.stack').html('<h3>Your stack is: ' + @model.stack + '</h3>')
+    @listenerOn()
+
+
+  listenerOn: ->
+    that = @
     @model.get('playerHand').on('lose', -> $('.button-container').html('<h3>You Lose</h3><button class="playagain">Do you want to play again?</button>'))
-    @model.get('dealerHand').on('bust', -> $('.win-container').html('<h3>Dealer Busts!  You Win!</h3><button class="playagain">Do you want to play again?</button>'))
     @model.get('dealerHand').on('getScore', -> that.model.compareScore())
     @model.on('playerwin', ->
-      # @model.stack = stack + (bet * 2)
+      that.model.playerwin()
+      @render
       $('.win-container').html('<h3>You Win!</h3><button class="playagain">Do you want to play again?</button>'))
-    @model.on('dealerwin', -> $('.win-container').html('<h3>Dealer Wins!</h3><button class="playagain">Do you want to play again?</button>'))
+    @model.on('dealerwin', ->
+      console.log('dealerwin fired')
+      $('.win-container').html('<h3>Dealer Wins!</h3><button class="playagain">Do you want to play again?</button>'))
+    @model.get('dealerHand').on('bust', ->
+      console.log('bust fired')
+      that.model.playerwin()
+      $('.win-container').html('<h3>Dealer Busts!  You Win!</h3><button class="playagain">Do you want to play again?</button>'))
+
+  listenerOff: ->
+    that = @
+    @model.get('playerHand').off('lose')
+    @model.get('dealerHand').off('getScore')
+    @model.off('playerwin')
+    @model.off('dealerwin')
+    @model.get('dealerHand').off('bust')
 
   render: ->
     @$el.children().detach()

@@ -15,8 +15,9 @@ class window.Hand extends Backbone.Collection
       @array[0].flip()
       while @scores().pop() < 17
         @hit()
+        #below triggers
       if @scores().pop() > 21 then @.trigger('bust', @)
-    @.trigger('getScore', @)
+      else @.trigger('getScore', @)
 
   scores: ->
     # The scores are an array of potential scores.
@@ -28,7 +29,7 @@ class window.Hand extends Backbone.Collection
     score = @reduce (score, card) ->
       score + if card.get 'revealed' then card.get 'value' else 0
     , 0
-    if score > 21 && !hasAce then @.trigger('lose', @)
+    if score > 21 && !hasAce && !@isDealer then @.trigger('lose', @)
     if @isDealer and hasAce and !@hasStood
       if @array[1].attributes.rankName == "Ace"
         [score + 10]
@@ -36,6 +37,9 @@ class window.Hand extends Backbone.Collection
         [score]
     else
       if hasAce and (score + 10 <= 21)
-        [score + 10]
-      else
-        [score]
+        score = score + 10
+      if score > 21 && hasAce && !@isDealer
+        @.trigger('lose', @)
+      [score]
+      # else
+      #   [score]
